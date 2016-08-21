@@ -41,7 +41,7 @@ def batch_iterator(train_data, batch_size, seq_length):
     train_data_len = len(train_data)
     num_batch = int(train_data_len // (batch_size * seq_length))
     if num_batch == 0:
-        raise ValueError("num_batch == 0, decrease batch_size or seq_length")
+        raise ValueError("num_batch = 0, decrease batch_size or seq_length")
     train_data = train_data[:num_batch * batch_size * seq_length]
     _x_train_data = train_data
     _y_train_data = np.copy(train_data)
