@@ -31,7 +31,7 @@ def read_raw_data(input_dir):
     raw_data = _read_file(train_path)
     char_to_id = _build_vocab(raw_data)
     train_data = _raw_data_to_char_ids(raw_data, char_to_id)
-    return train_data
+    return train_data, char_to_id
 
 
 def batch_iterator(train_data, batch_size, seq_length):
