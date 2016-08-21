@@ -1,12 +1,15 @@
 from __future__ import division
 from __future__ import print_function
 
+import cPickle
 import collections
 import os
-import codecs
 
 import numpy as np
 import tensorflow as tf
+
+vocab_file_name = "vocab.pkl"
+data_file_name = "data.pkl"
 
 
 def _read_file(file_path):
@@ -48,3 +51,27 @@ def batch_iterator(train_data, batch_size, seq_length):
     y_train_data = np.split(_y_train_data.reshape(batch_size, -1), num_batch, 1)
     for i in xrange(len(x_train_data)):
         yield (x_train_data[i], y_train_data[i])
+
+
+def persistVocab(vocab, dir_to_save):
+    file_path = os.path.join(dir_to_save, vocab_file_name)
+    with open(file_path, 'wb') as f:
+        cPickle.dump(vocab, f)
+
+
+def loadVocab(dir_to_read):
+    file_path = os.path.join(dir_to_read, vocab_file_name)
+    with open(file_path, 'rb') as f:
+        return cPickle.load(f)
+
+
+def persistData(data, dir_to_save):
+    file_path = os.path.join(dir_to_save, data_file_name)
+    with open(file_path, 'wb') as f:
+        cPickle.dump(data, f)
+
+
+def loadData(dir_to_read):
+    file_path = os.path.join(dir_to_read, data_file_name)
+    with open(file_path, 'rb') as f:
+        return cPickle.load(f)
