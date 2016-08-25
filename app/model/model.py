@@ -5,6 +5,7 @@ from __future__ import print_function
 import tensorflow as tf
 from tensorflow.python.ops import rnn_cell
 from tensorflow.python.ops import seq2seq
+import numpy as np
 
 
 class Model():
@@ -15,6 +16,9 @@ class Model():
             'gru': rnn_cell.GRUCell,
             'lstm': rnn_cell.BasicLSTMCell
         }
+        if not args.is_training:
+            args.batch_size = 1
+            args.seq_length = 1
         self.batch_size = args.batch_size
         self.seq_length = args.seq_length
         _cell = model_to_cell_map.get(args.model, rnn_cell.BasicRNNCell)(args.rnn_size)
@@ -95,3 +99,40 @@ class Model():
     @property
     def train_op(self):
         return self._train_op
+
+    def sample(self, sess, chars, vocab, num=200, prime='The ', sampling_type=1):
+        initial_state = self.cell.zero_state(self.args.batch_size, tf.float32).eval()
+        for char in prime[:-1]:
+            x = np.zeros((1, 1))
+            x[0, 0] = vocab[char]
+            feed = {self.input_data: x, self.initial_state:initial_state}
+            [initial_state] = sess.run([self.final_state], feed)
+
+        def weighted_pick(weights):
+            t = np.cumsum(weights)
+            s = np.sum(weights)
+            return(int(np.searchsorted(t, np.random.rand(1)*s)))
+
+        to_return = prime
+        prev_char = prime[-1]
+        for n in range(num):
+            x = np.zeros((1, 1))
+            x[0, 0] = vocab[prev_char]
+            feed = {self.input_data: x, self.initial_state:initial_state}
+            [probability, state] = sess.run([self.probability, self.final_state], feed)
+            p = probability[0]
+
+            if sampling_type == 0:
+                sample = np.argmax(p)
+            elif sampling_type == 2:
+                if char == ' ':
+                    sample = weighted_pick(p)
+                else:
+                    sample = np.argmax(p)
+            else: # sampling_type == 1 default:
+                sample = weighted_pick(p)
+
+            predicted_char = chars[sample]
+            to_return += predicted_char
+            prev_char = predicted_char
+        return to_return
