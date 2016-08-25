@@ -22,7 +22,7 @@ def _build_vocab(raw_data):
     count_pairs = sorted(counter.items(), key=lambda x: -x[1])
     chars, _ = zip(*count_pairs)
     char_to_id = dict(zip(chars, range(len(chars))))
-    return char_to_id
+    return char_to_id, chars
 
 
 def _raw_data_to_char_ids(raw_data, char_to_id):
@@ -32,10 +32,9 @@ def _raw_data_to_char_ids(raw_data, char_to_id):
 def read_raw_data(input_dir):
     train_path = os.path.join(input_dir, "data.txt")
     raw_data = _read_file(train_path)
-    char_to_id = _build_vocab(raw_data)
+    char_to_id, chars = _build_vocab(raw_data)
     train_data = _raw_data_to_char_ids(raw_data, char_to_id)
-    return train_data, char_to_id
-
+    return train_data, char_to_id, chars
 
 def batch_iterator(train_data, batch_size, seq_length):
     train_data_len = len(train_data)
