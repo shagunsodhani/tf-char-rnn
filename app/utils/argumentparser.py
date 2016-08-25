@@ -5,7 +5,7 @@ import argparse
 
 def ArgumentParser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--input_dir', type=str, default='input/shakespeare',
+    parser.add_argument('--input_dir', type=str, default='input',
                         help='input directory containing data.txt')
     parser.add_argument('--model_dir', type=str, default='model',
                         help='directory to store checkpointed models')
