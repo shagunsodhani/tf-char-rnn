@@ -28,13 +28,10 @@ def train(args):
         cPickle.dump((chars, vocab), f)
     with tf.Session(config=tf.ConfigProto(
                       allow_soft_placement=True)) as sess:
-    # with tf.Session() as sess:
         with tf.variable_scope("model", reuse=None):
             model = Model(args)
         tf.initialize_all_variables().run()
         saver = tf.train.Saver(tf.all_variables())
-        if args.init_from is not None:
-            saver.restore(sess, args.model_checkpoint_path)
         for epoch in xrange(args.num_epochs):
             lr_decay = args.decay_rate ** epoch
             # lr_decay = 1

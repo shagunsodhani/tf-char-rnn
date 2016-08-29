@@ -35,4 +35,9 @@ def ArgumentParser():
                         help='prime text')
     parser.add_argument('--sample', type=int, default=1,
                         help='0 to use max at each timestep, 1 to sample at each timestep, 2 to sample on spaces')
+    parser.add_argument('--device', type=str, default='/cpu:0',
+                        help='Computing device to use for training. \
+                        \'/cpu:0\' to use CPU of the machine.\
+                        \'/gpu:0\' to use the first GPU of the machine (if there is a GPU).\
+                        \'/gpu:1\' to use the second GPU of the machine and so on.')
     return parser.parse_args()

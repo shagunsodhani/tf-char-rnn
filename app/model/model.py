@@ -16,6 +16,7 @@ class Model():
             'gru': rnn_cell.GRUCell,
             'lstm': rnn_cell.BasicLSTMCell
         }
+        self.device = args.device
         if not args.is_training:
             args.batch_size = 1
             args.seq_length = 1
@@ -29,7 +30,7 @@ class Model():
         self._initial_state = cell.zero_state(args.batch_size, tf.float32)
 
         with tf.variable_scope('RNN'):
-            with tf.device('/cpu:0'):
+            with tf.device(self.device):
                 embedding = tf.get_variable("embedding", [args.vocab_size, args.rnn_size])
                 inputs = tf.split(1, args.seq_length, tf.nn.embedding_lookup(embedding, self.input_data))
                 inputs = [tf.squeeze(input_, [1]) for input_ in inputs]
