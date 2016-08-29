@@ -6,6 +6,7 @@ TensorFlow implementation of char-rnn using Multi-layer Recurrent Neural Network
 
 * Install [TensorFlow](http://www.tensorflow.org)
 * Put the data (to train on) in a file called 'data.txt'
+* Make `model` folder by running `mkdir model`
 * Run `python train.py --input_dir=path_to_folder_containing_data.txt`
 * For example, if data is in `input` folder, run `python train.py --input_dir=input`
 * To generate text using a checkpointed model, run `python generate.py`
