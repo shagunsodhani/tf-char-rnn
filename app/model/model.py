@@ -120,13 +120,13 @@ class Model():
             x = np.zeros((1, 1))
             x[0, 0] = vocab[prev_char]
             feed = {self.input_data: x, self.initial_state:initial_state}
-            [probability, state] = sess.run([self.probability, self.final_state], feed)
+            [probability, initial_state] = sess.run([self.probability, self.final_state], feed)
             p = probability[0]
 
             if sampling_type == 0:
                 sample = np.argmax(p)
             elif sampling_type == 2:
-                if char == ' ':
+                if prev_char == ' ':
                     sample = weighted_pick(p)
                 else:
                     sample = np.argmax(p)

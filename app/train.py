@@ -67,13 +67,15 @@ def run_epoch(sess, model, data, eval_op, saver, model_checkpoint_path, save_fre
         costs += cost
         iters += model.args.seq_length
 
+        if verbose:
+            print("%.3f perplexity: %.3f cost: %.3f time/batch: %.3f" %
+                      (step * 1.0 / epoch_size, np.exp(costs / iters), cost,
+                       (time.time() - start_time)))
+            start_time = time.time()
         if (step) % save_frequency == 0:
             saver.save(sess, model_checkpoint_path, global_step=step)
             print("model saved to {}".format(model_checkpoint_path))
-            if verbose:
-                print("%.3f perplexity: %.3f cost: %.3f time/batch: %.3f" %
-                      (step * 1.0 / epoch_size, np.exp(costs / iters), cost,
-                       (time.time() - start_time)))
+            
 
 
     return np.exp(costs / iters)
